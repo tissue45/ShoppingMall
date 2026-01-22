@@ -176,7 +176,7 @@ const CheckoutPage: React.FC = () => {
                 items: orderItemsData,
                 shipping_address: customerInfo.address,
                 recipient_name: customerInfo.name,
-                recipient_phone: customerInfo.phone,
+                recipient_phone: customerInfo.phone.replace(/[^0-9]/g, ''),
                 tracking_number: `TN${Date.now()}`,
                 estimated_delivery: estimatedDelivery.toISOString()
             }
@@ -224,15 +224,18 @@ const CheckoutPage: React.FC = () => {
                 originalAmount: totalPrice
             }))
 
+            const cleanPhone = customerInfo.phone.replace(/[^0-9]/g, '')
+            console.log('결제 요청 전화번호 (하이픈 제거):', cleanPhone)
+
             const paymentData: PaymentData = {
                 amount: finalPrice, // 할인된 최종 금액으로 결제
                 orderId,
                 orderName,
                 customerName: customerInfo.name,
                 customerEmail: customerInfo.email,
-                customerMobilePhone: customerInfo.phone.replace(/[^0-9]/g, ''),
-                successUrl: `${window.location.origin}${import.meta.env.BASE_URL}payment/success`,
-                failUrl: `${window.location.origin}${import.meta.env.BASE_URL}payment/fail`,
+                customerMobilePhone: cleanPhone,
+                successUrl: `${window.location.origin}${import.meta.env.BASE_URL}#/payment/success`,
+                failUrl: `${window.location.origin}${import.meta.env.BASE_URL}#/payment/fail`,
             }
 
             // 결제 방법에 따라 다른 결제 요청
