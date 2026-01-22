@@ -119,10 +119,7 @@ const ConditionalFooter: React.FC = () => {
 
 // Toast 컴포넌트를 WishlistProvider 내부로 이동
 const AppContent: React.FC = () => {
-  console.log('📄 AppContent 컴포넌트 렌더링 시작')
-  
   const { toastMessage, showToast, hideToast } = useWishlistContext()
-  console.log('✅ WishlistContext 로드 완료')
 
   return (
     <Router>
@@ -188,8 +185,6 @@ const AppContent: React.FC = () => {
 }
 
 function App() {
-  console.log('📱 App 컴포넌트 렌더링 시작')
-  
   return (
     <ErrorBoundary>
       <UserProvider>
