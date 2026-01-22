@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Supabase 프로젝트 설정
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || import.meta.env.REACT_APP_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.REACT_APP_SUPABASE_ANON_KEY;
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || import.meta.env.REACT_APP_SUPABASE_URL || 'https://toueihqbuqbmkatatonp.supabase.co';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.REACT_APP_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvdWVpaHFidXFibWthdGF0b25wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkwNTAxODksImV4cCI6MjA4NDYyNjE4OX0.8kduDOHf2EBEpNjCxOeEfpGhhjBN99d-jt_sM7HZCts';
 
 // 디버깅을 위한 로그
 console.log('🔍 환경변수 확인:');
