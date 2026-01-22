@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useCartContext } from '../context/CartContext'
 import { getCategoriesHierarchy } from '../services/categoryService'
 import { useUser } from '../context/UserContext'
@@ -16,9 +16,10 @@ const Header: React.FC = () => {
   const [popularTerms, setPopularTerms] = useState<string[]>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false)
-  
+
   const { getCartItemCount, syncCartOnLogout } = useCartContext()
   const location = useLocation()
+  const navigate = useNavigate()
   const { currentUser, setCurrentUser, logout: logoutFromContext } = useUser()
   const searchInputRef = useRef<HTMLInputElement>(null)
   const suggestionsRef = useRef<HTMLDivElement>(null)
@@ -80,7 +81,7 @@ const Header: React.FC = () => {
 
   const loadSuggestions = async () => {
     if (searchQuery.length < 2) return
-    
+
     setIsLoadingSuggestions(true)
     try {
       const suggestions = await getSearchSuggestions(searchQuery, 6)
@@ -97,14 +98,14 @@ const Header: React.FC = () => {
     try {
       // 장바구니 동기화 (회원 → 비회원 전환)
       await syncCartOnLogout()
-      
+
       // UserContext의 logout 함수 사용
       await logoutFromContext()
-      
+
       alert('로그아웃되었습니다.')
-      
+
       // 홈페이지로 완전한 새로고침과 함께 이동
-      window.location.replace('/')
+      navigate('/')
     } catch (error) {
       console.error('Logout error:', error)
       alert('로그아웃 중 오류가 발생했습니다.')
@@ -164,7 +165,7 @@ const Header: React.FC = () => {
     if (searchQuery.trim()) {
       // 검색어가 있으면 검색 페이지로 이동
       console.log('검색 실행:', searchQuery.trim())
-      window.location.href = `/search?search=${encodeURIComponent(searchQuery.trim())}`
+      navigate(`/search?search=${encodeURIComponent(searchQuery.trim())}`)
     } else {
       alert('검색어를 입력해주세요.')
     }
@@ -177,7 +178,7 @@ const Header: React.FC = () => {
   const handleSearchButtonClick = () => {
     if (searchQuery.trim()) {
       console.log('검색 버튼 클릭:', searchQuery.trim())
-      window.location.href = `/search?search=${encodeURIComponent(searchQuery.trim())}`
+      navigate(`/search?search=${encodeURIComponent(searchQuery.trim())}`)
     } else {
       alert('검색어를 입력해주세요.')
     }
@@ -192,13 +193,13 @@ const Header: React.FC = () => {
 
   const handleSuggestionClick = (suggestion: string) => {
     setSearchQuery(suggestion)
-    window.location.href = `/search?search=${encodeURIComponent(suggestion)}`
+    navigate(`/search?search=${encodeURIComponent(suggestion)}`)
     setShowSuggestions(false)
   }
 
   const handlePopularTermClick = (term: string) => {
     setSearchQuery(term)
-    window.location.href = `/search?search=${encodeURIComponent(term)}`
+    navigate(`/search?search=${encodeURIComponent(term)}`)
     setShowSuggestions(false)
   }
 
@@ -232,7 +233,7 @@ const Header: React.FC = () => {
                   </button>
                   {/* 카테고리 드롭다운 메뉴 */}
                   <div className={`absolute top-full left-0 bg-white border border-gray-200 shadow-xl z-50 w-[700px] mt-2 transition-all duration-200 ${isDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2.5'}`}>
-                    <div className="grid grid-cols-7 gap-0 p-3" style={{gridTemplateColumns: '100px repeat(6, 1fr)'}}>
+                    <div className="grid grid-cols-7 gap-0 p-3" style={{ gridTemplateColumns: '100px repeat(6, 1fr)' }}>
                       <div className="px-2 border-r border-gray-100 pr-3">
                         {categories.map((category) => (
                           <div
@@ -240,7 +241,7 @@ const Header: React.FC = () => {
                             className="mb-2"
                             onMouseEnter={() => handleCategoryHover(category)}
                           >
-                            <Link 
+                            <Link
                               to={`/category/${category.id}`}
                               className={`text-sm font-semibold text-gray-800 m-0 mb-1 py-1.5 cursor-pointer transition-colors duration-200 hover:text-black no-underline block ${activeCategory?.id === category.id ? 'text-black bg-gray-50 py-1.5 px-2 rounded-sm -mx-2 mb-1 font-bold' : ''}`}
                             >
@@ -254,7 +255,7 @@ const Header: React.FC = () => {
                         activeCategory.subcategories.map((subcategory: any, index: number) => (
                           <div key={index} className="px-2">
                             <div className="mb-2">
-                              <Link 
+                              <Link
                                 to={`/category/${subcategory.id}`}
                                 className="text-xs font-semibold text-gray-500 m-0 mb-1.5 pb-1 border-b border-gray-100 no-underline block hover:text-gray-700 transition-colors duration-200"
                               >
@@ -263,7 +264,7 @@ const Header: React.FC = () => {
                               {/* 레벨3 카테고리 (상품 링크) */}
                               {subcategory.subcategories && subcategory.subcategories.length > 0 ? (
                                 subcategory.subcategories.map((subsubcategory: any, index: number) => (
-                                  <Link 
+                                  <Link
                                     key={index}
                                     to={`/category/${subsubcategory.id}`}
                                     className="block py-1 text-gray-500 no-underline text-xs transition-colors duration-200 hover:text-black"
@@ -291,17 +292,17 @@ const Header: React.FC = () => {
                 </div>
                 {/* 검색창 */}
                 <form onSubmit={handleSearch} className="relative flex items-center">
-                  <input 
+                  <input
                     ref={searchInputRef}
-                    type="text" 
+                    type="text"
                     value={searchQuery}
                     onChange={handleSearchInputChange}
                     onKeyPress={handleKeyPress}
                     onFocus={handleSearchFocus}
-                    className="py-2.5 px-5 pr-12 border border-gray-200 rounded-full outline-none text-sm w-96 transition-all duration-300 bg-gray-50 focus:border-black focus:bg-white focus:shadow-lg" 
-                    placeholder="검색어를 입력하세요 (예: 나이키, 신발, 스포츠)" 
+                    className="py-2.5 px-5 pr-12 border border-gray-200 rounded-full outline-none text-sm w-96 transition-all duration-300 bg-gray-50 focus:border-black focus:bg-white focus:shadow-lg"
+                    placeholder="검색어를 입력하세요 (예: 나이키, 신발, 스포츠)"
                   />
-                  <button 
+                  <button
                     type="button"
                     onClick={handleSearchButtonClick}
                     className="absolute right-4 bg-transparent border-none cursor-pointer text-gray-500 p-1 flex items-center justify-center hover:text-black transition-colors duration-200"
@@ -312,7 +313,7 @@ const Header: React.FC = () => {
                       <path d="m21 21-4.35-4.35"></path>
                     </svg>
                   </button>
-                  
+
                   {/* 검색 제안 */}
                   {showSuggestions && (suggestions.length > 0 || popularTerms.length > 0 || isLoadingSuggestions) && (
                     <div
@@ -326,7 +327,7 @@ const Header: React.FC = () => {
                           <span className="ml-2 text-sm text-gray-600">검색 중...</span>
                         </div>
                       )}
-                      
+
                       {/* 검색 제안 */}
                       {!isLoadingSuggestions && suggestions.length > 0 && (
                         <div className="p-4 border-b border-gray-100">
@@ -342,7 +343,7 @@ const Header: React.FC = () => {
                           ))}
                         </div>
                       )}
-                      
+
                       {/* 인기 검색어 */}
                       {!isLoadingSuggestions && popularTerms.length > 0 && (
                         <div className="p-4">

@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { getPopularProducts } from '../services/productService'
 import { Product } from '../types'
 
 const WeeklyFocus: React.FC = () => {
+  const navigate = useNavigate()
   const [isVisible, setIsVisible] = useState(false)
   const [isBrandVisible, setIsBrandVisible] = useState(false)
   const [isProductsVisible, setIsProductsVisible] = useState(false)
@@ -20,7 +22,7 @@ const WeeklyFocus: React.FC = () => {
           setIsVisible(true)
         }
       },
-      { 
+      {
         threshold: 0.1,
         rootMargin: '0px 0px -100px 0px'
       }
@@ -32,7 +34,7 @@ const WeeklyFocus: React.FC = () => {
           setIsBrandVisible(true)
         }
       },
-      { 
+      {
         threshold: 0.1,
         rootMargin: '0px 0px -100px 0px'
       }
@@ -44,7 +46,7 @@ const WeeklyFocus: React.FC = () => {
           setIsProductsVisible(true)
         }
       },
-      { 
+      {
         threshold: 0.1,
         rootMargin: '0px 0px -100px 0px'
       }
@@ -88,9 +90,8 @@ const WeeklyFocus: React.FC = () => {
   return (
     <section ref={sectionRef} className="py-24 bg-white">
       <div className="max-w-6xl mx-auto px-6">
-        <h2 className={`text-3xl font-bold text-center mb-16 text-gray-900 transition-all duration-1000 ease-out transform ${
-          isVisible ? 'translate-y-0' : 'translate-y-8'
-        }`}>
+        <h2 className={`text-3xl font-bold text-center mb-16 text-gray-900 transition-all duration-1000 ease-out transform ${isVisible ? 'translate-y-0' : 'translate-y-8'
+          }`}>
           Weekly Focus
         </h2>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[400px]">
@@ -109,10 +110,10 @@ const WeeklyFocus: React.FC = () => {
           </div>
           <div className="flex flex-col gap-4">
             <div className="relative flex-1 overflow-hidden rounded-lg shadow-lg group">
-              <div 
+              <div
                 className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
-                style={{ 
-                  backgroundImage: 'url(https://contents.lotteon.com/display/dshoplnk/52737/2/M001313/685467/P70E969733B3E8393A6EDA22EB3F84023F93CFFC3BD0E6D547877026F26C11CD4/file/dims/optimize/format/webp)' 
+                style={{
+                  backgroundImage: 'url(https://contents.lotteon.com/display/dshoplnk/52737/2/M001313/685467/P70E969733B3E8393A6EDA22EB3F84023F93CFFC3BD0E6D547877026F26C11CD4/file/dims/optimize/format/webp)'
                 }}
               ></div>
               <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-end p-6">
@@ -121,10 +122,10 @@ const WeeklyFocus: React.FC = () => {
               </div>
             </div>
             <div className="relative flex-1 overflow-hidden rounded-lg shadow-lg group">
-              <div 
+              <div
                 className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
-                style={{ 
-                  backgroundImage: 'url(https://images.unsplash.com/photo-1469334031218-e382a71b716b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80)' 
+                style={{
+                  backgroundImage: 'url(https://images.unsplash.com/photo-1469334031218-e382a71b716b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80)'
                 }}
               ></div>
               <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-end p-6">
@@ -135,21 +136,20 @@ const WeeklyFocus: React.FC = () => {
           </div>
         </div>
       </div>
-      
+
       {/* 브랜드 섹션 */}
       <div ref={brandRef} className="max-w-6xl mx-auto px-6 mt-24">
-        <h2 className={`text-3xl font-bold text-center mb-16 text-gray-900 transition-all duration-1000 ease-out transform ${
-          isBrandVisible ? 'translate-y-0' : 'translate-y-8'
-        }`}>
+        <h2 className={`text-3xl font-bold text-center mb-16 text-gray-900 transition-all duration-1000 ease-out transform ${isBrandVisible ? 'translate-y-0' : 'translate-y-8'
+          }`}>
           New Brand Avenue
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-[600px]">
           {/* 첫 번째 행 - ADIDAS */}
           <div className="relative overflow-hidden rounded-lg shadow-lg group">
-            <div 
+            <div
               className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
-              style={{ 
-                backgroundImage: 'url(https://image.thehyundai.com/static/image/sect/dispbnnr22410015210020250818082110.jpg)' 
+              style={{
+                backgroundImage: 'url(https://image.thehyundai.com/static/image/sect/dispbnnr22410015210020250818082110.jpg)'
               }}
             ></div>
             <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-end p-6">
@@ -161,18 +161,18 @@ const WeeklyFocus: React.FC = () => {
             <div className="absolute inset-0 bg-white bg-opacity-95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center items-center p-6 text-center">
               <h3 className="text-xl font-bold text-gray-900 mb-3">ADIDAS</h3>
               <p className="text-gray-700 text-xs leading-relaxed">
-                독일의 전설적인 스포츠 브랜드로, 혁신적인 기술과 디자인으로 운동선수와 일반인 모두에게 최고의 성능을 제공합니다. 
+                독일의 전설적인 스포츠 브랜드로, 혁신적인 기술과 디자인으로 운동선수와 일반인 모두에게 최고의 성능을 제공합니다.
                 Boost, Primeknit 등 혁신적인 기술로 스포츠의 새로운 기준을 제시하고 있습니다.
               </p>
             </div>
           </div>
-          
+
           {/* 첫 번째 행 - MAXMARA */}
           <div className="relative overflow-hidden rounded-lg shadow-lg group">
-            <div 
+            <div
               className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
-              style={{ 
-                backgroundImage: 'url(https://image.thehyundai.com/HM/HM001Tile/20241119/164317/dispimg22410010020241119164341.jpg)' 
+              style={{
+                backgroundImage: 'url(https://image.thehyundai.com/HM/HM001Tile/20241119/164317/dispimg22410010020241119164341.jpg)'
               }}
             ></div>
             <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-end p-6">
@@ -184,18 +184,18 @@ const WeeklyFocus: React.FC = () => {
             <div className="absolute inset-0 bg-white bg-opacity-95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center items-center p-6 text-center">
               <h3 className="text-xl font-bold text-gray-900 mb-3">MAXMARA</h3>
               <p className="text-gray-700 text-xs leading-relaxed">
-                이탈리아의 프리미엄 패션 브랜드로, 우아하고 세련된 디자인으로 여성들에게 꿈의 코트를 제공합니다. 
+                이탈리아의 프리미엄 패션 브랜드로, 우아하고 세련된 디자인으로 여성들에게 꿈의 코트를 제공합니다.
                 최고급 소재와 정교한 테일러링으로 시간을 초월한 아름다움을 선사합니다.
               </p>
             </div>
           </div>
-          
+
           {/* 두 번째 행 - CREED */}
           <div className="relative overflow-hidden rounded-lg shadow-lg group">
-            <div 
+            <div
               className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
-              style={{ 
-                backgroundImage: 'url(https://image.thehyundai.com/static/image/sect/dispbnnr16793811012020220307101531.jpg)' 
+              style={{
+                backgroundImage: 'url(https://image.thehyundai.com/static/image/sect/dispbnnr16793811012020220307101531.jpg)'
               }}
             ></div>
             <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-end p-6">
@@ -207,18 +207,18 @@ const WeeklyFocus: React.FC = () => {
             <div className="absolute inset-0 bg-white bg-opacity-95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center items-center p-6 text-center">
               <h3 className="text-xl font-bold text-gray-900 mb-3">CREED</h3>
               <p className="text-gray-700 text-xs leading-relaxed">
-                영국 왕실의 공식 향수 제조업체로, 1760년부터 이어져 온 전통과 혁신을 담은 럭셔리 향수 브랜드입니다. 
+                영국 왕실의 공식 향수 제조업체로, 1760년부터 이어져 온 전통과 혁신을 담은 럭셔리 향수 브랜드입니다.
                 최고급 원료와 장인의 정성을 담아 만든 독특한 향으로 특별한 순간을 선사합니다.
               </p>
             </div>
           </div>
-          
+
           {/* 두 번째 행 - HERMÈS */}
           <div className="relative overflow-hidden rounded-lg shadow-lg group">
-            <div 
+            <div
               className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
-              style={{ 
-                backgroundImage: 'url(https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80)' 
+              style={{
+                backgroundImage: 'url(https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80)'
               }}
             ></div>
             <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-end p-6">
@@ -243,15 +243,14 @@ const WeeklyFocus: React.FC = () => {
           </button>
         </div>
       </div>
-      
+
       {/* Featured Products 섹션 */}
       <div ref={productsRef} className="max-w-6xl mx-auto px-6 mt-24">
-        <h2 className={`text-3xl font-bold text-center mb-16 text-gray-900 transition-all duration-1000 ease-out transform ${
-          isProductsVisible ? 'translate-y-0' : 'translate-y-8'
-        }`}>
+        <h2 className={`text-3xl font-bold text-center mb-16 text-gray-900 transition-all duration-1000 ease-out transform ${isProductsVisible ? 'translate-y-0' : 'translate-y-8'
+          }`}>
           Featured Products
         </h2>
-        
+
         {/* 제품 데이터 */}
         {(() => {
           if (loading) {
@@ -279,9 +278,9 @@ const WeeklyFocus: React.FC = () => {
                 {currentProducts.map((product, index) => {
                   const badgeIndex = index % badgeColors.length
                   return (
-                    <div key={product.id} className="group cursor-pointer" onClick={() => window.location.href = `/product/${product.id}`}>
+                    <div key={product.id} className="group cursor-pointer" onClick={() => navigate(`/product/${product.id}`)}>
                       <div className="relative overflow-hidden rounded-lg shadow-lg mb-4">
-                        <div 
+                        <div
                           className="w-full h-64 bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
                           style={{ backgroundImage: `url(${product.image})` }}
                         ></div>
@@ -296,7 +295,7 @@ const WeeklyFocus: React.FC = () => {
                   )
                 })}
               </div>
-              
+
               {/* 페이지네이션 */}
               {totalPages > 1 && (
                 <div className="flex justify-center items-center mt-16 space-x-8">
@@ -304,11 +303,10 @@ const WeeklyFocus: React.FC = () => {
                     <button
                       key={page}
                       onClick={() => setCurrentPage(page)}
-                      className={`text-2xl font-medium transition-colors ${
-                        currentPage === page 
-                          ? 'text-gray-900 border-b-2 border-gray-900 pb-1' 
-                          : 'text-gray-400 hover:text-gray-600'
-                      }`}
+                      className={`text-2xl font-medium transition-colors ${currentPage === page
+                        ? 'text-gray-900 border-b-2 border-gray-900 pb-1'
+                        : 'text-gray-400 hover:text-gray-600'
+                        }`}
                     >
                       {page}
                     </button>

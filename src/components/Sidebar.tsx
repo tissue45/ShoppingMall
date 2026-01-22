@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 interface SidebarProps {
   currentPage?: string
@@ -8,13 +8,14 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ currentPage, onPersonalInfoClick }) => {
   const location = useLocation()
+  const navigate = useNavigate()
 
   const sidebarMenus = [
     {
       title: '주문현황',
       items: [
-        { 
-          label: '주문접수/배송조회', 
+        {
+          label: '주문접수/배송조회',
           link: '/order-tracking',
           active: location.pathname === '/order-tracking'
         }
@@ -23,8 +24,8 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, onPersonalInfoClick }) =
     {
       title: '쇼핑통장',
       items: [
-        { 
-          label: '쿠폰', 
+        {
+          label: '쿠폰',
           link: '/coupon',
           active: location.pathname === '/coupon'
         }
@@ -33,36 +34,36 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, onPersonalInfoClick }) =
     {
       title: '쇼핑백',
       items: [
-        { 
-          label: '찜', 
+        {
+          label: '찜',
           link: '/wishlist',
           active: location.pathname === '/wishlist'
         },
-        { 
-          label: '최근 본 상품', 
+        {
+          label: '최근 본 상품',
           link: '/recent',
           active: location.pathname === '/recent'
         }
       ]
     },
-         {
-       title: '나의 정보',
-       items: [
-         { 
-           label: '회원정보변경', 
-           link: '#',
-           active: false,
-           onClick: () => {
-             if (onPersonalInfoClick) {
-               onPersonalInfoClick('회원정보변경')
-             } else {
-               // onPersonalInfoClick이 없으면 마이페이지로 이동
-               window.location.href = '/mypage'
-             }
-           }
-         }
-       ]
-     }
+    {
+      title: '나의 정보',
+      items: [
+        {
+          label: '회원정보변경',
+          link: '#',
+          active: false,
+          onClick: () => {
+            if (onPersonalInfoClick) {
+              onPersonalInfoClick('회원정보변경')
+            } else {
+              // onPersonalInfoClick이 없으면 마이페이지로 이동
+              navigate('/mypage')
+            }
+          }
+        }
+      ]
+    }
   ]
 
   return (
@@ -76,29 +77,27 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, onPersonalInfoClick }) =
           <div key={index} className="mb-8">
             <h4 className="text-base font-semibold text-gray-800 m-0 mb-4">{menu.title}</h4>
             <ul className="list-none p-0 m-0">
-                             {menu.items.map((item, itemIndex) => (
-                 <li key={itemIndex} className="mb-1">
-                   {item.onClick ? (
-                     <button
-                       onClick={item.onClick}
-                       className={`text-sm text-gray-600 py-3 px-4 block w-full text-left transition-all duration-300 rounded-md select-none relative z-10 hover:text-gray-800 hover:bg-gray-50 ${
-                         item.active ? 'text-gray-800 bg-gray-100 font-medium' : ''
-                       }`}
-                     >
-                       {item.label}
-                     </button>
-                   ) : (
-                     <Link
-                       to={item.link}
-                       className={`text-sm text-gray-600 py-3 px-4 block transition-all duration-300 rounded-md select-none relative z-10 hover:text-gray-800 hover:bg-gray-50 ${
-                         item.active ? 'text-gray-800 bg-gray-100 font-medium' : ''
-                       }`}
-                     >
-                       {item.label}
-                     </Link>
-                   )}
-                 </li>
-               ))}
+              {menu.items.map((item, itemIndex) => (
+                <li key={itemIndex} className="mb-1">
+                  {item.onClick ? (
+                    <button
+                      onClick={item.onClick}
+                      className={`text-sm text-gray-600 py-3 px-4 block w-full text-left transition-all duration-300 rounded-md select-none relative z-10 hover:text-gray-800 hover:bg-gray-50 ${item.active ? 'text-gray-800 bg-gray-100 font-medium' : ''
+                        }`}
+                    >
+                      {item.label}
+                    </button>
+                  ) : (
+                    <Link
+                      to={item.link}
+                      className={`text-sm text-gray-600 py-3 px-4 block transition-all duration-300 rounded-md select-none relative z-10 hover:text-gray-800 hover:bg-gray-50 ${item.active ? 'text-gray-800 bg-gray-100 font-medium' : ''
+                        }`}
+                    >
+                      {item.label}
+                    </Link>
+                  )}
+                </li>
+              ))}
             </ul>
           </div>
         ))}

@@ -24,7 +24,7 @@ const CheckoutPage: React.FC = () => {
     // 로그인된 사용자 정보 불러오기
     useEffect(() => {
         console.log('UserContext에서 가져온 currentUser:', currentUser)
-        
+
         if (currentUser) {
             console.log('사용자 정보:', currentUser)
             console.log('사용자 ID:', currentUser.id)
@@ -72,10 +72,10 @@ const CheckoutPage: React.FC = () => {
 
     // 사용자 등급 확인 (useUser 컨텍스트 사용)
     const user = currentUser
-    
+
     // 배송비 계산 (FAMILY 등급은 3,000원, SILVER 이상은 무료)
     const shippingFee = user && (user.grade === 'SILVER' || user.grade === 'GOLD' || user.grade === 'DIAMOND' || user.grade === 'PRESTIGE VIP') ? 0 : 3000
-    
+
     // 쿠폰 할인 적용
     const availableCoupons = getAvailableCoupons(totalPrice)
     const discountAmount = selectedCoupon ? calculateDiscount(selectedCoupon, totalPrice) : 0
@@ -97,7 +97,7 @@ const CheckoutPage: React.FC = () => {
                     <div className="bg-white rounded-lg p-12 text-center shadow-sm">
                         <h2 className="text-2xl font-bold text-gray-900 mb-4">주문할 상품이 없습니다</h2>
                         <p className="text-gray-600 mb-8">상품을 선택한 후 주문해주세요.</p>
-                        <button 
+                        <button
                             onClick={() => navigate(isDirectOrder ? '/' : '/cart')}
                             className="px-8 py-3 bg-black text-white rounded-lg font-semibold hover:bg-gray-800 transition-colors"
                         >
@@ -121,11 +121,11 @@ const CheckoutPage: React.FC = () => {
     const createOrderData = async (orderId: string): Promise<Omit<Order, 'id' | 'created_at' | 'updated_at'> | null> => {
         try {
             const { supabase } = await import('../services/supabase')
-            
+
             let userId: string
-            
+
             console.log('주문 생성 - 사용자 정보 (useUser):', currentUser)
-            
+
             if (currentUser && currentUser.id) {
                 // 로그인 사용자: 기존 ID 사용 (users 테이블에 이미 존재한다고 가정)
                 userId = currentUser.id
@@ -133,14 +133,14 @@ const CheckoutPage: React.FC = () => {
             } else {
                 // 비회원: 원래 PaymentSuccessPage 방식 사용 (localStorage 기반)
                 console.log('비회원 주문 - localStorage에서 임시 ID 생성')
-                
+
                 // 임시로 기존 사용자 중 하나를 사용 (실제로는 비회원 테이블을 별도로 만들거나 다른 방식 필요)
                 const existingUsers = await supabase
                     .from('users')
                     .select('id')
                     .limit(1)
                     .single()
-                
+
                 if (existingUsers.data) {
                     userId = existingUsers.data.id
                     console.log('비회원 주문 - 임시로 기존 사용자 ID 사용:', userId)
@@ -203,8 +203,8 @@ const CheckoutPage: React.FC = () => {
 
         try {
             const orderId = tossPaymentsService.generateOrderId()
-            const orderName = orderItems.length === 1 
-                ? orderItems[0].product.name 
+            const orderName = orderItems.length === 1
+                ? orderItems[0].product.name
                 : `${orderItems[0].product.name} 외 ${orderItems.length - 1}건`
 
             // 1. 주문 데이터 준비 (결제 성공 후 생성할 데이터)
@@ -231,8 +231,8 @@ const CheckoutPage: React.FC = () => {
                 customerName: customerInfo.name,
                 customerEmail: customerInfo.email,
                 customerMobilePhone: customerInfo.phone,
-                successUrl: `${window.location.origin}/payment/success`,
-                failUrl: `${window.location.origin}/payment/fail`,
+                successUrl: `${window.location.origin}${import.meta.env.BASE_URL}payment/success`,
+                failUrl: `${window.location.origin}${import.meta.env.BASE_URL}payment/fail`,
             }
 
             // 결제 방법에 따라 다른 결제 요청
@@ -272,7 +272,7 @@ const CheckoutPage: React.FC = () => {
         try {
             const orderId = tossPaymentsService.generateOrderId()
             const paymentKey = `test_payment_${Date.now()}`
-            
+
             // 1. 테스트용 주문 데이터 준비
             const orderData = await createOrderData(orderId)
             if (!orderData) {
@@ -338,21 +338,21 @@ const CheckoutPage: React.FC = () => {
                                     </button>
                                 )}
                             </div>
-                            
+
                             {/* 장바구니에서 선택한 쿠폰 정보 표시 */}
                             {selectedCoupon && (
                                 <div className="mb-3 p-2 bg-blue-50 border border-blue-200 rounded text-sm text-blue-800">
                                     <strong>장바구니에서 선택한 쿠폰:</strong> {selectedCoupon.name}
                                 </div>
                             )}
-                            
+
                             {selectedCoupon ? (
                                 <div className="bg-white rounded-lg p-3 border border-gray-200">
                                     <div className="flex items-center justify-between">
                                         <div>
                                             <div className="font-medium text-gray-800">{selectedCoupon.name}</div>
                                             <div className="text-sm text-gray-500">
-                                                {selectedCoupon.type === 'discount' 
+                                                {selectedCoupon.type === 'discount'
                                                     ? `${formatPrice(selectedCoupon.value)} 할인`
                                                     : `${selectedCoupon.value}% 할인${selectedCoupon.maxDiscount ? ` (최대 ${formatPrice(selectedCoupon.maxDiscount)})` : ''}`
                                                 }
@@ -378,7 +378,7 @@ const CheckoutPage: React.FC = () => {
                                 >
                                     <div>
                                         <p className="text-sm text-gray-500">
-                                            {availableCoupons.length > 0 
+                                            {availableCoupons.length > 0
                                                 ? `${availableCoupons.length}개의 쿠폰 사용 가능`
                                                 : '사용 가능한 쿠폰이 없습니다'
                                             }
@@ -412,7 +412,7 @@ const CheckoutPage: React.FC = () => {
                                                     <div className="text-sm text-gray-500">할인 없이 주문</div>
                                                 </div>
                                             </div>
-                                            
+
                                             {availableCoupons.map((coupon) => (
                                                 <div key={coupon.id} className="flex items-center p-3 border border-gray-200 rounded-lg">
                                                     <input
@@ -425,7 +425,7 @@ const CheckoutPage: React.FC = () => {
                                                     <div className="flex-1">
                                                         <div className="font-medium text-gray-800">{coupon.name}</div>
                                                         <div className="text-sm text-gray-500">
-                                                            {coupon.type === 'discount' 
+                                                            {coupon.type === 'discount'
                                                                 ? `${formatPrice(coupon.value)} 할인`
                                                                 : `${coupon.value}% 할인${coupon.maxDiscount ? ` (최대 ${formatPrice(coupon.maxDiscount)})` : ''}`
                                                             }
@@ -580,15 +580,15 @@ const CheckoutPage: React.FC = () => {
 
                             {/* 결제 버튼 */}
                             <div className="flex gap-4 pt-6">
-                                <button 
-                                    type="button" 
-                                    onClick={() => navigate(-1)} 
+                                <button
+                                    type="button"
+                                    onClick={() => navigate(-1)}
                                     className="flex-1 py-4 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
                                 >
                                     이전으로
                                 </button>
-                                <button 
-                                    type="submit" 
+                                <button
+                                    type="submit"
                                     className="flex-1 py-4 bg-black text-white rounded-lg font-semibold hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                     disabled={isProcessing}
                                 >
@@ -599,8 +599,8 @@ const CheckoutPage: React.FC = () => {
                             {/* 개발자용 테스트 버튼 */}
                             <div className="border-t pt-6 text-center">
                                 <p className="text-sm text-gray-500 mb-3">🔧 개발자 테스트용</p>
-                                <button 
-                                    type="button" 
+                                <button
+                                    type="button"
                                     onClick={handleTestPaymentSuccess}
                                     className="px-6 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition-colors"
                                 >

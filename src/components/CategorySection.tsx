@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { getProductsByCategory } from '../services/productService'
 import { getCategoriesHierarchy } from '../services/categoryService'
 
 const CategorySection: React.FC = () => {
+  const navigate = useNavigate()
   const [categories, setCategories] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -18,23 +19,23 @@ const CategorySection: React.FC = () => {
         console.error('Error fetching categories:', error)
         // 에러 시 기본 카테고리 사용
         setCategories([
-          { 
+          {
             id: 1,
-            name: '여성 패션', 
-            path: '/category/1', 
-            image: 'https://image.thehyundai.com/HM/HM006/20250806/104045/pc_exclusive_stories.jpg' 
+            name: '여성 패션',
+            path: '/category/1',
+            image: 'https://image.thehyundai.com/HM/HM006/20250806/104045/pc_exclusive_stories.jpg'
           },
-          { 
+          {
             id: 2,
-            name: '남성 패션', 
-            path: '/category/2', 
-            image: 'https://image.thehyundai.com/HM/HM006/20250805/132821/pc_exclusive.jpg' 
+            name: '남성 패션',
+            path: '/category/2',
+            image: 'https://image.thehyundai.com/HM/HM006/20250805/132821/pc_exclusive.jpg'
           },
-          { 
+          {
             id: 3,
-            name: '뷰티', 
-            path: '/category/3', 
-            image: 'https://image.thehyundai.com/HM/HM006/20250804/103547/pc_exclusive_stylein_3rd.jpg' 
+            name: '뷰티',
+            path: '/category/3',
+            image: 'https://image.thehyundai.com/HM/HM006/20250804/103547/pc_exclusive_stylein_3rd.jpg'
           },
         ])
       } finally {
@@ -64,15 +65,15 @@ const CategorySection: React.FC = () => {
         <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">Categories</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {categories.map((category) => (
-            <div 
-              key={category.id} 
+            <div
+              key={category.id}
               className="group cursor-pointer overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
-              onClick={() => window.location.href = `/category/${category.id}`}
+              onClick={() => navigate(`/category/${category.id}`)}
             >
-              <div 
+              <div
                 className="relative h-80 bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
-                style={{ 
-                  backgroundImage: `url(${category.image || 'https://image.thehyundai.com/HM/HM006/20250806/104045/pc_exclusive_stories.jpg'})` 
+                style={{
+                  backgroundImage: `url(${category.image || 'https://image.thehyundai.com/HM/HM006/20250806/104045/pc_exclusive_stories.jpg'})`
                 }}
               >
                 <div className="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center">
