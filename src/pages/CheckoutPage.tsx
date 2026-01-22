@@ -230,7 +230,7 @@ const CheckoutPage: React.FC = () => {
                 orderName,
                 customerName: customerInfo.name,
                 customerEmail: customerInfo.email,
-                customerMobilePhone: customerInfo.phone,
+                customerMobilePhone: customerInfo.phone.replace(/[^0-9]/g, ''),
                 successUrl: `${window.location.origin}${import.meta.env.BASE_URL}payment/success`,
                 failUrl: `${window.location.origin}${import.meta.env.BASE_URL}payment/fail`,
             }
