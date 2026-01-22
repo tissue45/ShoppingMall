@@ -49,7 +49,7 @@ const isAdminPath = (pathname: string) => pathname.startsWith('/admin')
 const ConditionalHeader: React.FC = () => {
   const location = useLocation()
   const shouldHideHeader = hideHeaderPaths.includes(location.pathname) || isAdminPath(location.pathname)
-  
+
   return shouldHideHeader ? null : <Header />
 }
 
@@ -57,16 +57,16 @@ const ConditionalHeader: React.FC = () => {
 const ConditionalFooter: React.FC = () => {
   const location = useLocation()
   const shouldHideFooter = isAdminPath(location.pathname)
-  
+
   return shouldHideFooter ? null : <Footer />
 }
 
 // Toast 컴포넌트를 WishlistProvider 내부로 이동
 const AppContent: React.FC = () => {
   const { toastMessage, showToast, hideToast } = useWishlistContext()
-  
+
   return (
-    <Router>
+    <Router basename={import.meta.env.BASE_URL}>
       <ScrollToTop />
       <div className="w-full min-h-screen m-0 p-0">
         <ConditionalHeader />
@@ -97,7 +97,7 @@ const AppContent: React.FC = () => {
             <Route path="/inquiry" element={<InquiryPage />} />
             <Route path="/inquiry-history" element={<InquiryHistoryPage />} />
             <Route path="/inquiry/:id" element={<InquiryDetailPage />} />
-            
+
             {/* 관리자 라우트 추가 */}
             <Route path="/admin/*" element={
               <Suspense fallback={
