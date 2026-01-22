@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react'
+import React, { lazy, Suspense, Component, ErrorInfo, ReactNode } from 'react'
 import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 import { CartProvider } from './context/CartContext'
 import { WishlistProvider, useWishlistContext } from './context/WishlistContext'
@@ -36,6 +36,62 @@ import RecentViewPage from './pages/RecentViewPage'
 
 import { UserProvider } from './context/UserContext'
 
+// 에러 바운더리 컴포넌트
+class ErrorBoundary extends Component<
+  { children: ReactNode },
+  { hasError: boolean; error: Error | null }
+> {
+  constructor(props: { children: ReactNode }) {
+    super(props)
+    this.state = { hasError: false, error: null }
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error }
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('React Error:', error)
+    console.error('Error Info:', errorInfo)
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          padding: '20px',
+          textAlign: 'center'
+        }}>
+          <h1 style={{ fontSize: '24px', marginBottom: '20px' }}>오류가 발생했습니다</h1>
+          <p style={{ color: '#666', marginBottom: '20px' }}>
+            {this.state.error?.message || '알 수 없는 오류가 발생했습니다.'}
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: '#000',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
+          >
+            페이지 새로고침
+          </button>
+        </div>
+      )
+    }
+
+    return this.props.children
+  }
+}
+
 // 관리자 앱을 lazy loading으로 로드
 const AdminApp = lazy(() => import('./admin/App'))
 
@@ -66,7 +122,7 @@ const AppContent: React.FC = () => {
   const { toastMessage, showToast, hideToast } = useWishlistContext()
 
   return (
-    <Router basename={import.meta.env.BASE_URL}>
+    <Router>
       <ScrollToTop />
       <div className="w-full min-h-screen m-0 p-0">
         <ConditionalHeader />
@@ -130,17 +186,19 @@ const AppContent: React.FC = () => {
 
 function App() {
   return (
-    <UserProvider>
-      <CartProvider>
-        <WishlistProvider>
-          <RecentViewProvider>
-            <CouponProvider>
-              <AppContent />
-            </CouponProvider>
-          </RecentViewProvider>
-        </WishlistProvider>
-      </CartProvider>
-    </UserProvider>
+    <ErrorBoundary>
+      <UserProvider>
+        <CartProvider>
+          <WishlistProvider>
+            <RecentViewProvider>
+              <CouponProvider>
+                <AppContent />
+              </CouponProvider>
+            </RecentViewProvider>
+          </WishlistProvider>
+        </CartProvider>
+      </UserProvider>
+    </ErrorBoundary>
   )
 }
 
