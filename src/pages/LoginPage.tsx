@@ -39,7 +39,7 @@ const LoginPage: React.FC = () => {
         setCurrentUser(result.user)
         
         // 장바구니 동기화 (비회원 → 회원 전환)
-        await syncCartOnLogin()
+        await syncCartOnLogin(result.user.id)
         
         alert(`${result.user.name}님, 환영합니다!`)
         navigate('/')

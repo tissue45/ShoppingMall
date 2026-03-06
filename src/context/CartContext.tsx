@@ -19,7 +19,7 @@ interface CartContextType {
   formatPrice: (price: number) => string
   getCartItemCount: () => number
   clearCart: () => void
-  syncCartOnLogin: () => Promise<void>
+  syncCartOnLogin: (userId?: string) => Promise<void>
   syncCartOnLogout: () => Promise<void>
 }
 
@@ -146,8 +146,9 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   }, [selectedItems, currentUser?.id])
 
   // 로그인 시 비회원 장바구니와 회원 장바구니 병합
-  const syncCartOnLogin = async () => {
-    if (!currentUser?.id) return
+  const syncCartOnLogin = async (userId?: string) => {
+    const targetUserId = userId || currentUser?.id
+    if (!targetUserId) return
 
     try {
       setIsLoading(true)
@@ -160,7 +161,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         console.log(`📦 비회원 장바구니에서 ${guestItems.length}개 상품 발견`)
         
         // 비회원 장바구니를 데이터베이스에 추가
-        const success = await cartService.addMultipleItemsToUserCart(currentUser.id, guestItems)
+        const success = await cartService.addMultipleItemsToUserCart(targetUserId, guestItems)
         
         if (success) {
           console.log('✅ 비회원 장바구니 병합 완료')

@@ -91,20 +91,59 @@ export const getUserCart = async (userId: string): Promise<{items: CartItem[], s
 export const addItemToUserCart = async (userId: string, item: CartItem): Promise<boolean> => {
     try {
         const dbItem = cartItemToDbItem(item, userId)
-        
-        // UPSERT: 이미 존재하면 수량 업데이트, 없으면 새로 추가
-        const { error } = await supabase
+
+        let existingQuery = supabase
             .from('user_carts')
-            .upsert({
+            .select('id, quantity')
+            .eq('user_id', userId)
+            .eq('product_id', item.productId)
+
+        if (item.product.size) {
+            existingQuery = existingQuery.eq('size', item.product.size)
+        } else {
+            existingQuery = existingQuery.is('size', null)
+        }
+
+        if (item.product.color) {
+            existingQuery = existingQuery.eq('color', item.product.color)
+        } else {
+            existingQuery = existingQuery.is('color', null)
+        }
+
+        const { data: existingItem, error: fetchError } = await existingQuery.maybeSingle()
+
+        if (fetchError) {
+            console.error('장바구니 기존 상품 조회 오류:', fetchError)
+            return false
+        }
+
+        if (existingItem) {
+            const { error: updateError } = await supabase
+                .from('user_carts')
+                .update({
+                    quantity: existingItem.quantity + item.quantity,
+                    is_selected: true,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('id', existingItem.id)
+
+            if (updateError) {
+                console.error('장바구니 수량 갱신 오류:', updateError)
+                return false
+            }
+            return true
+        }
+
+        const { error: insertError } = await supabase
+            .from('user_carts')
+            .insert({
                 ...dbItem,
+                created_at: new Date().toISOString(),
                 updated_at: new Date().toISOString()
-            }, {
-                onConflict: 'user_id,product_id,size,color',
-                ignoreDuplicates: false
             })
 
-        if (error) {
-            console.error('장바구니 추가 오류:', error)
+        if (insertError) {
+            console.error('장바구니 신규 추가 오류:', insertError)
             return false
         }
 
@@ -266,22 +305,12 @@ export const clearUserCart = async (userId: string): Promise<boolean> => {
 // 여러 상품을 한 번에 장바구니에 추가 (비회원 → 회원 전환 시 사용)
 export const addMultipleItemsToUserCart = async (userId: string, items: CartItem[]): Promise<boolean> => {
     try {
-        const dbItems = items.map(item => ({
-            ...cartItemToDbItem(item, userId),
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-        }))
-
-        const { error } = await supabase
-            .from('user_carts')
-            .upsert(dbItems, {
-                onConflict: 'user_id,product_id,size,color',
-                ignoreDuplicates: false
-            })
-
-        if (error) {
-            console.error('여러 상품 추가 오류:', error)
-            return false
+        for (const item of items) {
+            const success = await addItemToUserCart(userId, item)
+            if (!success) {
+                console.error('여러 상품 추가 중 개별 상품 추가 실패:', item.id)
+                return false
+            }
         }
 
         return true
