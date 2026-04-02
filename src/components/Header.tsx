@@ -6,6 +6,45 @@ import { useUser } from '../context/UserContext'
 import { logout } from '../services/userService'
 import { getSearchSuggestions, getPopularSearchTerms } from '../services/productService'
 
+/** 현재 URL의 카테고리 id에 맞춰 햄버거 패널 왼쪽·중앙 열이 유지되도록 트리에서 1·2단계 찾기 */
+function findCategoryContext(
+  categories: any[],
+  targetId: number,
+): { level1: any; level2: any | null } | null {
+  for (const c1 of categories) {
+    if (c1.id === targetId) {
+      return { level1: c1, level2: c1.subcategories?.[0] ?? null }
+    }
+    for (const c2 of c1.subcategories || []) {
+      if (c2.id === targetId) {
+        return { level1: c1, level2: c2 }
+      }
+      for (const c3 of c2.subcategories || []) {
+        if (c3.id === targetId) {
+          return { level1: c1, level2: c2 }
+        }
+      }
+    }
+  }
+  return null
+}
+
+function isHamburgerExcludedCategory(name: unknown): boolean {
+  return typeof name === 'string' && name.trim() === '기타'
+}
+
+/** 햄버거 메뉴에서 '기타' 분류 및 그 하위 항목 제거 */
+function filterCategoriesForHamburger(nodes: any[]): any[] {
+  return nodes
+    .filter((c) => c && !isHamburgerExcludedCategory(c.name))
+    .map((c) => ({
+      ...c,
+      subcategories: c.subcategories?.length
+        ? filterCategoriesForHamburger(c.subcategories)
+        : [],
+    }))
+}
+
 const Header: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [activeCategory, setActiveCategory] = useState<any>(null)
@@ -28,21 +67,39 @@ const Header: React.FC = () => {
   const hideTopHeaderPages = ['/login', '/signup', '/forgot-password']
   const shouldHideTopHeader = hideTopHeaderPages.includes(location.pathname)
 
-  // 카테고리 로드
+  // 카테고리 트리는 마운트 시 한 번만 로드 (경로 바뀔 때마다 초기화하지 않음)
   useEffect(() => {
-    // 카테고리 데이터 로드
     const loadCategories = async () => {
       const categoryData = await getCategoriesHierarchy()
-      setCategories(categoryData)
-      if (categoryData.length > 0) {
-        setActiveCategory(categoryData[0]) // 첫 번째 카테고리를 기본값으로
-        if (categoryData[0].subcategories && categoryData[0].subcategories.length > 0) {
-          setActiveSubcategory(categoryData[0].subcategories[0])
-        }
-      }
+      setCategories(filterCategoriesForHamburger(categoryData))
     }
     loadCategories()
-  }, [location.pathname])
+  }, [])
+
+  // 카테고리 페이지 URL과 햄버거 메뉴 선택 동기화: 가디건 등 3단 클릭 후에도 남성패션·상의 열 유지
+  useEffect(() => {
+    if (categories.length === 0) return
+
+    const m = location.pathname.match(/\/category\/(\d+)/)
+    if (m) {
+      const id = parseInt(m[1], 10)
+      const ctx = findCategoryContext(categories, id)
+      if (ctx) {
+        setActiveCategory(ctx.level1)
+        setActiveSubcategory(
+          ctx.level2 ?? (ctx.level1.subcategories?.[0] ?? null),
+        )
+        return
+      }
+    }
+
+    setActiveCategory((prev) => prev ?? categories[0])
+    setActiveSubcategory((prev) => {
+      if (prev) return prev
+      const c0 = categories[0]
+      return c0?.subcategories?.[0] ?? null
+    })
+  }, [location.pathname, categories])
 
   // 인기 검색어 로드
   useEffect(() => {
