@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Supabase 설정
-const supabaseUrl = 'https://zyqbuuovliissozugjfq.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5cWJ1dW92bGlpc3NvenVnamZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2MzQ4MTgsImV4cCI6MjA3MDIxMDgxOH0.TYj-kGTlsGlznZCYX4M1yIilu0z1iNZ6tcWg5iLIaHE';
+const supabaseUrl = 'https://toueihqbuqbmkatatonp.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvdWVpaHFidXFibWthdGF0b25wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkwNTAxODksImV4cCI6MjA4NDYyNjE4OX0.8kduDOHf2EBEpNjCxOeEfpGhhjBN99d-jt_sM7HZCts';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // 실패한 브랜드들 (Auth는 이미 등록되어 있으므로 brand_admins 테이블에만 추가)

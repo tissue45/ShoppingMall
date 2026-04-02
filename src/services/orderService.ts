@@ -1,4 +1,5 @@
 import { supabase } from './supabase'
+import { resolveProductImage } from '../utils/productImageUrl'
 
 export interface OrderItem {
   product_id: number
@@ -128,10 +129,22 @@ export const getUserOrders = async (userId: string): Promise<Order[]> => {
       return []
     }
 
-    return data || []
+    return (data || []).map(normalizeOrderItemImages)
   } catch (error) {
     console.error('주문 조회 중 예외 발생:', error)
     return []
+  }
+}
+
+function normalizeOrderItemImages<T extends { items?: OrderItem[] }>(row: T): T {
+  const items = row.items
+  if (!items?.length) return row
+  return {
+    ...row,
+    items: items.map((item) => ({
+      ...item,
+      image: resolveProductImage(item.image),
+    })),
   }
 }
 
@@ -149,7 +162,7 @@ export const getOrderById = async (orderId: string): Promise<Order | null> => {
       return null
     }
 
-    return data
+    return data ? normalizeOrderItemImages(data) : null
   } catch (error) {
     console.error('주문 조회 중 예외 발생:', error)
     return null

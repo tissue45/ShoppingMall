@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from 'react'
 import { Product } from '../types'
 import { useUser } from './UserContext'
 import { 
@@ -58,59 +58,62 @@ export const RecentViewProvider: React.FC<RecentViewProviderProps> = ({ children
     loadRecentViews()
   }, [currentUser])
 
-  const addToRecent = async (product: Product) => {
-    if (!currentUser?.id) return
+  const addToRecent = useCallback(async (product: Product) => {
+    const uid = currentUser?.id
+    if (!uid) return
 
     try {
-      const success = await addRecentView(currentUser.id, product.id)
+      const success = await addRecentView(uid, product.id)
       if (success) {
-        // 성공하면 목록을 다시 로드
-        const updatedRecentViews = await getUserRecentViews(currentUser.id)
+        const updatedRecentViews = await getUserRecentViews(uid)
         setRecentItems(updatedRecentViews)
       }
     } catch (error) {
       console.error('Failed to add to recent views:', error)
     }
-  }
+  }, [currentUser?.id])
 
-  const removeFromRecent = async (productId: number) => {
-    if (!currentUser?.id) return
+  const removeFromRecent = useCallback(async (productId: number) => {
+    const uid = currentUser?.id
+    if (!uid) return
 
     try {
-      const success = await removeRecentView(currentUser.id, productId)
+      const success = await removeRecentView(uid, productId)
       if (success) {
         setRecentItems(prev => prev.filter(item => item.id !== productId))
       }
     } catch (error) {
       console.error('Failed to remove from recent views:', error)
     }
-  }
+  }, [currentUser?.id])
 
-  const clearRecent = async () => {
-    if (!currentUser?.id) return
+  const clearRecent = useCallback(async () => {
+    const uid = currentUser?.id
+    if (!uid) return
 
     try {
-      const success = await clearUserRecentViews(currentUser.id)
+      const success = await clearUserRecentViews(uid)
       if (success) {
         setRecentItems([])
       }
     } catch (error) {
       console.error('Failed to clear recent views:', error)
     }
-  }
+  }, [currentUser?.id])
 
-  const getRecentCount = () => {
-    return recentItems.length
-  }
+  const getRecentCount = useCallback(() => recentItems.length, [recentItems])
 
-  const value: RecentViewContextType = {
-    recentItems,
-    addToRecent,
-    removeFromRecent,
-    clearRecent,
-    getRecentCount,
-    loading
-  }
+  const value: RecentViewContextType = useMemo(
+    () => ({
+      recentItems,
+      addToRecent,
+      removeFromRecent,
+      clearRecent,
+      getRecentCount,
+      loading,
+    }),
+    [recentItems, addToRecent, removeFromRecent, clearRecent, getRecentCount, loading],
+  )
 
   return (
     <RecentViewContext.Provider value={value}>

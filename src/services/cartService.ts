@@ -1,5 +1,6 @@
 import { supabase } from './supabase'
 import { CartItem } from '../types'
+import { resolveProductImage } from '../utils/productImageUrl'
 
 export interface DbCartItem {
     id: string
@@ -42,7 +43,7 @@ export const dbItemToCartItem = (dbItem: DbCartItem): CartItem => ({
         description: '', // DB에서 가져오지 않으므로 빈 문자열
         price: dbItem.product_price,
         brand: dbItem.brand,
-        image: dbItem.product_image,
+        image: resolveProductImage(dbItem.product_image),
         category_id: 0, // DB에서 가져오지 않으므로 기본값
         status: 'forsale' as const,
         sales: 0,

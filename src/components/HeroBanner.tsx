@@ -6,27 +6,27 @@ const HeroBanner: React.FC = () => {
 
   const slides = [
     {
-      image: 'https://image.thehyundai.com/HM/HM006/20250821/095846/pc_mainrolling_12.jpg',
+      image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1920&q=80',
       title: 'PREMIUM COLLECTION',
       description: '프리미엄 컬렉션'
     },
     {
-      image: 'https://image.thehyundai.com/HM/HM039/20250728/135825/ban20250728140328.jpg',
+      image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1920&q=80',
       title: 'PREMIUM FALL 2025',
       description: '프리미엄 가을 컬렉션'
     },
     {
-      image: 'https://image.thehyundai.com/HM/HM039/20250728/080540/ban20250728122629.jpg',
+      image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1920&q=80',
       title: "MEN'S LUXURY",
       description: '세련된 남성을 위한 럭셔리 컬렉션'
     },
     {
-      image: 'https://image.thehyundai.com/HM/HM039/20250728/080540/ban20250728122537.jpg',
+      image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1920&q=80',
       title: 'PREMIUM STORE',
       description: '프리미엄 쇼핑의 새로운 경험'
     },
     {
-      image: 'https://image.thehyundai.com/HM/HM039/20250818/110611/ban20250818134628.jpg',
+      image: 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=1920&q=80',
       title: 'KIDS COLLECTION',
       description: '사랑스러운 아이들을 위한 특별한 컬렉션'
     }

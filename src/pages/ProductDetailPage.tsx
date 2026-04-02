@@ -7,6 +7,7 @@ import { useRecentViewContext } from '../context/RecentViewContext'
 import { useUser } from '../context/UserContext'
 import { getProductById } from '../services/productService'
 import { Product } from '../types'
+import { PRODUCT_IMAGE_FALLBACK } from '../utils/productImageUrl'
 
 const ProductDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -37,10 +38,8 @@ const ProductDetailPage: React.FC = () => {
     const fetchProduct = async () => {
       if (id) {
         try {
-          console.log('Fetching product with ID:', id)
           const productData = await getProductById(parseInt(id))
-          console.log('Product data received:', productData)
-          
+
           if (productData) {
             setProduct(productData)
             // 상품이 로드되면 최근 본 상품에 추가
@@ -183,12 +182,52 @@ const ProductDetailPage: React.FC = () => {
           {/* 상품 이미지 */}
           <div className="space-y-4">
             <div className="aspect-square overflow-hidden rounded-lg bg-gray-100">
-              <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  const el = e.currentTarget
+                  if (el.dataset.fallbackApplied) return
+                  el.dataset.fallbackApplied = '1'
+                  el.src = PRODUCT_IMAGE_FALLBACK
+                }}
+              />
             </div>
             <div className="flex gap-4">
-              <img src={product.image} alt="썸네일 1" className="w-20 h-20 object-cover rounded-lg border-2 border-black cursor-pointer" />
-              <img src={product.image} alt="썸네일 2" className="w-20 h-20 object-cover rounded-lg border border-gray-300 cursor-pointer hover:border-gray-400 transition-colors" />
-              <img src={product.image} alt="썸네일 3" className="w-20 h-20 object-cover rounded-lg border border-gray-300 cursor-pointer hover:border-gray-400 transition-colors" />
+              <img
+                src={product.image}
+                alt="썸네일 1"
+                className="w-20 h-20 object-cover rounded-lg border-2 border-black cursor-pointer"
+                onError={(e) => {
+                  const el = e.currentTarget
+                  if (el.dataset.fallbackApplied) return
+                  el.dataset.fallbackApplied = '1'
+                  el.src = PRODUCT_IMAGE_FALLBACK
+                }}
+              />
+              <img
+                src={product.image}
+                alt="썸네일 2"
+                className="w-20 h-20 object-cover rounded-lg border border-gray-300 cursor-pointer hover:border-gray-400 transition-colors"
+                onError={(e) => {
+                  const el = e.currentTarget
+                  if (el.dataset.fallbackApplied) return
+                  el.dataset.fallbackApplied = '1'
+                  el.src = PRODUCT_IMAGE_FALLBACK
+                }}
+              />
+              <img
+                src={product.image}
+                alt="썸네일 3"
+                className="w-20 h-20 object-cover rounded-lg border border-gray-300 cursor-pointer hover:border-gray-400 transition-colors"
+                onError={(e) => {
+                  const el = e.currentTarget
+                  if (el.dataset.fallbackApplied) return
+                  el.dataset.fallbackApplied = '1'
+                  el.src = PRODUCT_IMAGE_FALLBACK
+                }}
+              />
             </div>
           </div>
 

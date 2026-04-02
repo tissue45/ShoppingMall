@@ -1,5 +1,6 @@
 import { supabase } from './supabase'
 import { Product, Category } from '../types'
+import { resolveProductImageFromUrls } from '../utils/productImageUrl'
 
 // 모든 상품 가져오기
 export const getAllProducts = async (): Promise<Product[]> => {
@@ -17,7 +18,7 @@ export const getAllProducts = async (): Promise<Product[]> => {
 
         return data?.map(product => ({
             ...product,
-            image: product.image_urls?.[0] || '/placeholder-image.jpg'
+            image: resolveProductImageFromUrls(product.image_urls)
         })) || []
     } catch (error) {
         console.error('Error in getAllProducts:', error)
@@ -42,7 +43,7 @@ export const getProductsByCategory = async (categoryId: number): Promise<Product
 
         return data?.map(product => ({
             ...product,
-            image: product.image_urls?.[0] || '/placeholder-image.jpg'
+            image: resolveProductImageFromUrls(product.image_urls)
         })) || []
     } catch (error) {
         console.error('Error in getProductsByCategory:', error)
@@ -53,8 +54,6 @@ export const getProductsByCategory = async (categoryId: number): Promise<Product
 // 특정 상품 가져오기
 export const getProductById = async (id: number): Promise<Product | null> => {
     try {
-        console.log('getProductById called with id:', id)
-        
         const { data, error } = await supabase
             .from('products')
             .select('*')
@@ -71,14 +70,30 @@ export const getProductById = async (id: number): Promise<Product | null> => {
             return null
         }
 
-        console.log('Product data from database:', data)
+        const resolvedImage = resolveProductImageFromUrls(data.image_urls)
+
+        if (import.meta.env.DEV) {
+            console.group(`[DB 상품] 클릭/상세 조회 → Supabase`)
+            console.log('스키마·테이블', 'public.products')
+            console.log('조건', `id = ${id} (PK)`)
+            console.log('쿼리', ".from('products').select('*').eq('id', id).single()")
+            console.log('원본 image_urls 컬럼', data.image_urls)
+            console.log('화면용 image (resolve 후)', resolvedImage)
+            console.log('행 요약', {
+                id: data.id,
+                name: data.name,
+                category_id: data.category_id,
+                status: data.status,
+                price: data.price,
+            })
+            console.groupEnd()
+        }
 
         const product = {
             ...data,
-            image: data.image_urls?.[0] || '/placeholder-image.jpg'
+            image: resolvedImage
         }
 
-        console.log('Processed product:', product)
         return product
     } catch (error) {
         console.error('Error in getProductById:', error)
@@ -103,7 +118,7 @@ export const getPopularProducts = async (limit: number = 8): Promise<Product[]> 
 
         return data?.map(product => ({
             ...product,
-            image: product.image_urls?.[0] || '/placeholder-image.jpg'
+            image: resolveProductImageFromUrls(product.image_urls)
         })) || []
     } catch (error) {
         console.error('Error in getPopularProducts:', error)
@@ -128,7 +143,7 @@ export const getNewProducts = async (limit: number = 8): Promise<Product[]> => {
 
         return data?.map(product => ({
             ...product,
-            image: product.image_urls?.[0] || '/placeholder-image.jpg'
+            image: resolveProductImageFromUrls(product.image_urls)
         })) || []
     } catch (error) {
         console.error('Error in getNewProducts:', error)
@@ -276,7 +291,7 @@ export const searchProducts = async (query: string): Promise<Product[]> => {
 
         return data?.map(product => ({
             ...product,
-            image: product.image_urls?.[0] || '/placeholder-image.jpg'
+            image: resolveProductImageFromUrls(product.image_urls)
         })) || []
     } catch (error) {
         console.error('Error in searchProducts:', error)
@@ -339,7 +354,7 @@ export const advancedSearchProducts = async (
 
         return data?.map(product => ({
             ...product,
-            image: product.image_urls?.[0] || '/placeholder-image.jpg'
+            image: resolveProductImageFromUrls(product.image_urls)
         })) || []
     } catch (error) {
         console.error('Error in advancedSearchProducts:', error)
@@ -487,7 +502,7 @@ export const getDiscountedProducts = async (limit: number = 8): Promise<Product[
 
         return data?.map(product => ({
             ...product,
-            image: product.image_urls?.[0] || '/placeholder-image.jpg'
+            image: resolveProductImageFromUrls(product.image_urls)
         })) || []
     } catch (error) {
         console.error('Error in getDiscountedProducts:', error)
@@ -514,7 +529,7 @@ export const getRelatedProducts = async (productId: number, categoryId: number, 
 
         return data?.map(product => ({
             ...product,
-            image: product.image_urls?.[0] || '/placeholder-image.jpg'
+            image: resolveProductImageFromUrls(product.image_urls)
         })) || []
     } catch (error) {
         console.error('Error in getRelatedProducts:', error)
@@ -603,7 +618,7 @@ export const getProductsByLevel3Category = async (level3CategoryId: number): Pro
         return {
             products: products?.map(product => ({
                 ...product,
-                image: product.image_urls?.[0] || '/placeholder-image.jpg'
+                image: resolveProductImageFromUrls(product.image_urls)
             })) || [],
             categoryName: level3Category.name
         }

@@ -113,7 +113,7 @@ const WeeklyFocus: React.FC = () => {
               <div
                 className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
                 style={{
-                  backgroundImage: 'url(https://contents.lotteon.com/display/dshoplnk/52737/2/M001313/685467/P70E969733B3E8393A6EDA22EB3F84023F93CFFC3BD0E6D547877026F26C11CD4/file/dims/optimize/format/webp)'
+                  backgroundImage: 'url(https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1200&q=80)'
                 }}
               ></div>
               <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-end p-6">
@@ -148,8 +148,8 @@ const WeeklyFocus: React.FC = () => {
           <div className="relative overflow-hidden rounded-lg shadow-lg group">
             <div
               className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
-              style={{
-                backgroundImage: 'url(https://image.thehyundai.com/static/image/sect/dispbnnr22410015210020250818082110.jpg)'
+                style={{
+                backgroundImage: 'url(https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1200&q=80)'
               }}
             ></div>
             <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-end p-6">
@@ -171,8 +171,8 @@ const WeeklyFocus: React.FC = () => {
           <div className="relative overflow-hidden rounded-lg shadow-lg group">
             <div
               className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
-              style={{
-                backgroundImage: 'url(https://image.thehyundai.com/HM/HM001Tile/20241119/164317/dispimg22410010020241119164341.jpg)'
+                style={{
+                backgroundImage: 'url(https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1200&q=80)'
               }}
             ></div>
             <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-end p-6">
@@ -194,8 +194,8 @@ const WeeklyFocus: React.FC = () => {
           <div className="relative overflow-hidden rounded-lg shadow-lg group">
             <div
               className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
-              style={{
-                backgroundImage: 'url(https://image.thehyundai.com/static/image/sect/dispbnnr16793811012020220307101531.jpg)'
+                style={{
+                backgroundImage: 'url(https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=1200&q=80)'
               }}
             ></div>
             <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-end p-6">

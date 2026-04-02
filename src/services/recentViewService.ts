@@ -1,5 +1,6 @@
 import { supabase } from './supabase'
 import { Product } from '../types'
+import { resolveProductImageFromUrls } from '../utils/productImageUrl'
 
 // 사용자의 최근 본 상품 목록 가져오기
 export const getUserRecentViews = async (userId: string): Promise<Product[]> => {
@@ -21,7 +22,7 @@ export const getUserRecentViews = async (userId: string): Promise<Product[]> => 
 
     return data?.map(item => ({
       ...item.products,
-      image: item.products.image_urls?.[0] || '/placeholder-image.jpg',
+      image: resolveProductImageFromUrls(item.products.image_urls),
       viewedAt: item.viewed_at
     })) || []
   } catch (error) {
@@ -39,7 +40,7 @@ export const addRecentView = async (userId: string, productId: number): Promise<
       .select('id')
       .eq('user_id', userId)
       .eq('product_id', productId)
-      .single()
+      .maybeSingle()
 
     if (existing) {
       // 이미 존재하면 시간만 업데이트

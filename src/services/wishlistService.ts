@@ -1,5 +1,6 @@
 import { supabase } from './supabase'
 import { Product } from '../types'
+import { resolveProductImageFromUrls } from '../utils/productImageUrl'
 
 export interface WishlistItem {
   id: string
@@ -44,7 +45,7 @@ export const getUserWishlist = async (userId: string): Promise<Product[]> => {
     // 이미지 URL 처리 및 created_at 순서대로 정렬
     const productsMap = new Map(productsData?.map(product => [product.id, {
       ...product,
-      image: product.image_urls?.[0] || '/placeholder-image.jpg'
+      image: resolveProductImageFromUrls(product.image_urls)
     }]) || [])
     
     return wishlistData
