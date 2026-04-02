@@ -14,6 +14,7 @@ import {
 } from '../services/searchService'
 import { useUser } from '../context/UserContext'
 import { Product } from '../types'
+import { productListPrice, productSalePrice } from '../utils/productPrice'
 
 interface SearchFilters {
   categoryId?: number
@@ -421,7 +422,10 @@ const SearchComponent: React.FC = () => {
             </div>
           ) : searchResults.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {searchResults.map((product) => (
+              {searchResults.map((product) => {
+                const listPx = productListPrice(product)
+                const salePx = productSalePrice(product)
+                return (
                 <div
                   key={product.id}
                   className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer"
@@ -438,8 +442,13 @@ const SearchComponent: React.FC = () => {
                     <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">
                       {product.name}
                     </h3>
-                    <p className="text-lg font-bold text-blue-600 mb-2">
-                      {formatPrice(product.price)}원
+                    <p className="text-lg font-bold text-blue-600 mb-2 flex flex-wrap items-baseline gap-2">
+                      {listPx != null && (
+                        <span className="text-sm text-gray-400 line-through font-normal">
+                          {formatPrice(listPx)}원
+                        </span>
+                      )}
+                      <span>{formatPrice(salePx)}원</span>
                     </p>
                     {product.brand && (
                       <p className="text-sm text-gray-600 mb-2">{product.brand}</p>
@@ -450,7 +459,8 @@ const SearchComponent: React.FC = () => {
                     </div>
                   </div>
                 </div>
-              ))}
+              )
+              })}
             </div>
           ) : (
             <div className="text-center py-12">

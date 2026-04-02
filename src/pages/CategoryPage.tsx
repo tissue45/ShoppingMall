@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getProductsByLevel3Category, getProductsByParentCategory, getCategoryById } from '../services/categoryService'
+import { productListPrice, productSalePrice } from '../utils/productPrice'
 import { supabase } from '../services/supabase'
 import { Product } from '../types'
 
@@ -204,7 +205,10 @@ const CategoryPage: React.FC = () => {
                 {/* 상품 목록 */}
                 {products.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        {products.map((product) => (
+                        {products.map((product) => {
+                            const listPx = productListPrice(product)
+                            const salePx = productSalePrice(product)
+                            return (
                             <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
                                 <div className="aspect-w-1 aspect-h-1 w-full">
                                     <img
@@ -225,8 +229,15 @@ const CategoryPage: React.FC = () => {
                                         {product.description}
                                     </p>
                                     <div className="flex justify-between items-center">
-                                        <span className="text-xl font-bold text-gray-900">
-                                            ₩{product.price?.toLocaleString()}
+                                        <span className="flex flex-wrap items-baseline gap-2">
+                                            {listPx != null && (
+                                                <span className="text-sm text-gray-400 line-through">
+                                                    ₩{listPx.toLocaleString()}
+                                                </span>
+                                            )}
+                                            <span className="text-xl font-bold text-gray-900">
+                                                ₩{salePx.toLocaleString()}
+                                            </span>
                                         </span>
                                         <button 
                                             onClick={() => navigate(`/product/${product.id}`)}
@@ -237,7 +248,8 @@ const CategoryPage: React.FC = () => {
                                     </div>
                                 </div>
                             </div>
-                        ))}
+                        )
+                        })}
                     </div>
                 ) : (
                     <div className="text-center py-12">

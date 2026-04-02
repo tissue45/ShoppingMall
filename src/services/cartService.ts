@@ -72,8 +72,29 @@ export const getUserCart = async (userId: string): Promise<{items: CartItem[], s
         const items: CartItem[] = []
         const selectedIds: string[] = []
 
+        const productIds = [...new Set((data ?? []).map((r) => r.product_id))]
+        let originalByProductId = new Map<number, number | null>()
+        if (productIds.length > 0) {
+            const { data: prows } = await supabase
+                .from('products')
+                .select('id, original_price')
+                .in('id', productIds)
+            originalByProductId = new Map(
+                (prows ?? []).map((p: { id: number; original_price: unknown }) => [
+                    p.id,
+                    p.original_price != null && p.original_price !== ''
+                        ? Number(p.original_price)
+                        : null,
+                ]),
+            )
+        }
+
         data?.forEach(dbItem => {
             const cartItem = dbItemToCartItem(dbItem)
+            const orig = originalByProductId.get(dbItem.product_id)
+            if (orig != null && orig > cartItem.product.price) {
+                cartItem.product.original_price = orig
+            }
             items.push(cartItem)
             
             if (dbItem.is_selected) {

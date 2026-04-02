@@ -8,6 +8,7 @@ import { useUser } from '../context/UserContext'
 import { getProductById } from '../services/productService'
 import { Product } from '../types'
 import { PRODUCT_IMAGE_FALLBACK } from '../utils/productImageUrl'
+import { productDiscountPercent, productListPrice, productSalePrice } from '../utils/productPrice'
 
 const ProductDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -162,6 +163,10 @@ const ProductDetailPage: React.FC = () => {
     console.log('결제 페이지로 이동 시도')
   }
 
+  const listPriceVal = productListPrice(product)
+  const salePriceVal = productSalePrice(product)
+  const discountPct = productDiscountPercent(product)
+
   return (
     <div className="min-h-screen bg-white">
       {/* 브레드크럼 */}
@@ -237,10 +242,16 @@ const ProductDetailPage: React.FC = () => {
               <div className="text-lg text-gray-600 mb-2">{product.brand || '브랜드'}</div>
               <h1 className="text-3xl font-bold text-black mb-6">{product.name}</h1>
 
-              <div className="flex items-center gap-4 mb-8">
-                <div className="text-lg text-gray-400 line-through">₩{formatPrice(product.price + 100000)}</div>
-                <div className="text-3xl font-bold text-black">₩{formatPrice(product.price)}</div>
-                <div className="px-3 py-1 bg-red-500 text-white text-sm font-semibold rounded">10% 할인</div>
+              <div className="flex flex-wrap items-center gap-4 mb-8">
+                {listPriceVal != null && (
+                  <div className="text-lg text-gray-400 line-through">₩{formatPrice(listPriceVal)}</div>
+                )}
+                <div className="text-3xl font-bold text-black">₩{formatPrice(salePriceVal)}</div>
+                {discountPct != null && (
+                  <div className="px-3 py-1 bg-red-500 text-white text-sm font-semibold rounded">
+                    {discountPct}% 할인
+                  </div>
+                )}
               </div>
             </div>
 
@@ -306,7 +317,7 @@ const ProductDetailPage: React.FC = () => {
             <div className="border-t pt-6">
               <div className="flex justify-between items-center text-xl font-bold">
                 <span>총 상품금액</span>
-                <span>₩{formatPrice(product.price * quantity)}</span>
+                <span>₩{formatPrice(salePriceVal * quantity)}</span>
               </div>
             </div>
 

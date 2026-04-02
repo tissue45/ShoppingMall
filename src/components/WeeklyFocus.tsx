@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getPopularProducts } from '../services/productService'
+import { productListPrice, productSalePrice } from '../utils/productPrice'
 import { Product } from '../types'
 
 const WeeklyFocus: React.FC = () => {
@@ -277,6 +278,8 @@ const WeeklyFocus: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {currentProducts.map((product, index) => {
                   const badgeIndex = index % badgeColors.length
+                  const listPx = productListPrice(product)
+                  const salePx = productSalePrice(product)
                   return (
                     <div key={product.id} className="group cursor-pointer" onClick={() => navigate(`/product/${product.id}`)}>
                       <div className="relative overflow-hidden rounded-lg shadow-lg mb-4">
@@ -290,7 +293,14 @@ const WeeklyFocus: React.FC = () => {
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">{product.name}</h3>
                       <p className="text-gray-600 text-sm mb-2">{product.brand}</p>
-                      <p className="text-xl font-bold text-gray-900">₩{new Intl.NumberFormat('ko-KR').format(product.price)}</p>
+                      <p className="text-xl font-bold text-gray-900 flex flex-wrap items-baseline gap-2">
+                        {listPx != null && (
+                          <span className="text-sm text-gray-400 line-through font-normal">
+                            ₩{new Intl.NumberFormat('ko-KR').format(listPx)}
+                          </span>
+                        )}
+                        <span>₩{new Intl.NumberFormat('ko-KR').format(salePx)}</span>
+                      </p>
                     </div>
                   )
                 })}

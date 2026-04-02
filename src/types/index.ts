@@ -3,6 +3,8 @@ export interface Product {
   name: string
   description: string
   price: number
+  /** 정가(취소선). 있고 price보다 크면 할인 표시 */
+  original_price?: number | null
   brand?: string
   image_urls?: string[]
   image: string

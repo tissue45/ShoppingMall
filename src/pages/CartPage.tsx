@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { productListPrice, productSalePrice } from '../utils/productPrice'
 import { FiTrash2, FiMinus, FiPlus, FiHeart, FiGift, FiChevronDown, FiChevronUp } from 'react-icons/fi'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCartContext } from '../context/CartContext'
@@ -208,8 +209,18 @@ const CartPage: React.FC = () => {
 
                     <div className="flex-shrink-0 text-right">
                       <div className="text-sm text-gray-500 mb-1">판매가</div>
-                      <div className="text-sm text-gray-400 line-through">₩{formatPrice(item.product.price)}</div>
-                      <div className="text-lg font-bold text-black">₩{formatPrice(item.product.price * item.quantity)}</div>
+                      {(() => {
+                        const sale = productSalePrice(item.product)
+                        const list = productListPrice(item.product)
+                        return (
+                          <>
+                            {list != null && (
+                              <div className="text-sm text-gray-400 line-through">₩{formatPrice(list * item.quantity)}</div>
+                            )}
+                            <div className="text-lg font-bold text-black">₩{formatPrice(sale * item.quantity)}</div>
+                          </>
+                        )
+                      })()}
                     </div>
 
                     <div className="flex-shrink-0">

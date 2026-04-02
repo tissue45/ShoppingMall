@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom'
 import { Product } from '../types'
 import { getProductsByLevel3Category, getBreadcrumbPath } from '../services/productService'
+import { productListPrice, productSalePrice, toPriceNumber } from '../utils/productPrice'
 import Breadcrumb from '../components/Breadcrumb'
 
 type SortOption = 'sales' | 'recent' | 'recommended' | 'price_low' | 'price_high' | 'reviews'
@@ -79,10 +80,10 @@ const ProductListPage: React.FC = () => {
         sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
         break
       case 'price_low':
-        sorted.sort((a, b) => (a.price || 0) - (b.price || 0))
+        sorted.sort((a, b) => toPriceNumber(a.price) - toPriceNumber(b.price))
         break
       case 'price_high':
-        sorted.sort((a, b) => (b.price || 0) - (a.price || 0))
+        sorted.sort((a, b) => toPriceNumber(b.price) - toPriceNumber(a.price))
         break
       case 'reviews':
         // 리뷰 수 기준 정렬 (실제 리뷰 데이터가 있다면 사용)
@@ -266,7 +267,10 @@ const ProductListPage: React.FC = () => {
               ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
               : 'space-y-4'
             }`}>
-            {filteredProducts.map((product) => (
+            {filteredProducts.map((product) => {
+              const listPx = productListPrice(product)
+              const salePx = productSalePrice(product)
+              return (
               <Link
                 key={product.id}
                 to={`/product/${product.id}`}
@@ -295,14 +299,20 @@ const ProductListPage: React.FC = () => {
                   <p className="text-gray-600 text-sm mb-2 line-clamp-2">
                     {product.description}
                   </p>
-                  <div className="flex justify-end items-center">
+                  <div className="flex justify-end items-center gap-2 flex-wrap">
+                    {listPx != null && (
+                      <span className="text-sm text-gray-400 line-through">
+                        ₩{listPx.toLocaleString()}
+                      </span>
+                    )}
                     <span className="text-xl font-bold text-gray-900">
-                      ₩{product.price?.toLocaleString()}
+                      ₩{salePx.toLocaleString()}
                     </span>
                   </div>
                 </div>
               </Link>
-            ))}
+            )
+            })}
           </div>
         ) : (
           <div className="text-center py-12">

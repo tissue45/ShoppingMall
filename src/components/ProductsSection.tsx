@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { getPopularProducts } from '../services/productService'
+import { productListPrice, productSalePrice } from '../utils/productPrice'
 import { Product } from '../types'
 
 const ProductsSection: React.FC = () => {
@@ -49,7 +50,10 @@ const ProductsSection: React.FC = () => {
       <div className="max-w-6xl mx-auto px-6">
         <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">Featured Products</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {products.map((product) => (
+          {products.map((product) => {
+            const listPx = productListPrice(product)
+            const salePx = productSalePrice(product)
+            return (
             <Link key={product.id} to={`/product/${product.id}`} className="group bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden">
               <div className="relative overflow-hidden">
                 <img 
@@ -61,10 +65,18 @@ const ProductsSection: React.FC = () => {
               <div className="p-6">
                 <div className="text-sm text-gray-500 mb-2 font-medium">{product.brand}</div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">{product.name}</h3>
-                <p className="text-xl font-bold text-gray-900">₩{new Intl.NumberFormat('ko-KR').format(product.price)}</p>
+                <p className="text-xl font-bold text-gray-900 flex flex-wrap items-baseline gap-2">
+                  {listPx != null && (
+                    <span className="text-sm text-gray-400 line-through font-normal">
+                      ₩{new Intl.NumberFormat('ko-KR').format(listPx)}
+                    </span>
+                  )}
+                  <span>₩{new Intl.NumberFormat('ko-KR').format(salePx)}</span>
+                </p>
               </div>
             </Link>
-          ))}
+          )
+          })}
         </div>
 
         {/* Pagination */}
