@@ -3,15 +3,27 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 
+const DEMO_ACCOUNTS = [
+  { label: '본사', email: 'admin@naver.com' },
+  { label: '가맹점', email: 'merchant@naver.com' },
+];
+const DEMO_PASSWORD = '11111111';
+
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState(DEMO_ACCOUNTS[0].email);
+  const [password, setPassword] = useState(DEMO_PASSWORD);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
   const { signIn } = useAuth();
   const navigate = useNavigate();
+
+  const fillDemoAccount = (demoEmail) => {
+    setEmail(demoEmail);
+    setPassword(DEMO_PASSWORD);
+    setError('');
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,6 +60,23 @@ const Login = () => {
               {error}
             </div>
           )}
+
+          <div className="demo-account-picker">
+            <span className="demo-account-label">테스트 계정</span>
+            <div className="demo-account-buttons">
+              {DEMO_ACCOUNTS.map((account) => (
+                <button
+                  key={account.email}
+                  type="button"
+                  className={`demo-account-button ${email === account.email ? 'active' : ''}`}
+                  onClick={() => fillDemoAccount(account.email)}
+                >
+                  {account.label}
+                  <small>{account.email}</small>
+                </button>
+              ))}
+            </div>
+          </div>
 
           <div className="form-group">
             <label htmlFor="email">이메일</label>

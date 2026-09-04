@@ -10,8 +10,8 @@ const LoginPage: React.FC = () => {
   const { setCurrentUser } = useUser()
   const { syncCartOnLogin } = useCartContext()
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: 'customer@naver.com',
+    password: '11111111'
   })
   const [isLoading, setIsLoading] = useState(false)
 

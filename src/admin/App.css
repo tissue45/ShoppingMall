@@ -1036,6 +1036,59 @@ body {
   gap: 1.5rem;
 }
 
+.demo-account-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.demo-account-label {
+  font-weight: 600;
+  color: #333;
+  font-size: 0.875rem;
+}
+
+.demo-account-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.demo-account-button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #f8f9fa;
+  color: #333;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.demo-account-button small {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #666;
+  word-break: break-all;
+}
+
+.demo-account-button:hover {
+  border-color: #495057;
+  background: #fff;
+}
+
+.demo-account-button.active {
+  border-color: #495057;
+  background: #fff;
+  box-shadow: 0 0 0 1px #495057;
+}
+
 .error-message {
   background: #fee;
   color: #c33;
